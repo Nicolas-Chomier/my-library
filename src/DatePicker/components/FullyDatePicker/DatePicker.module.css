@@ -1,0 +1,30 @@
+.limited_dates {
+	margin: auto;
+	padding: 50px;
+	background-color: rgba(22, 22, 22, 0.8);
+	cursor: not-allowed;
+}
+.dates {
+	margin: auto;
+	padding: 50px;
+	background-color: transparent;
+	cursor: pointer;
+}
+.dates:hover {
+	background-color: rgba(33, 108, 248, 0.692);
+}
+.max_dates {
+	background-color: rgba(22, 22, 22, 0.8);
+}
+.start_date {
+	background-color: rgb(33, 109, 248);
+}
+.end_date {
+	background-color: rgb(167, 72, 245);
+}
+.date_between {
+	background-color: rgba(143, 143, 143, 0.829);
+}
+.today {
+	background-color: red;
+}
