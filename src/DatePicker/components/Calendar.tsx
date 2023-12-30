@@ -4,7 +4,7 @@ import React, { useMemo } from 'react';
 // Local components
 // Hooks and utilities
 // Configuration
-// import  './Calendar.css';
+import './Calendar.css';
 
 const FRAME: React.ReactNode[] = [
 	<tr className={'calendar_row'} key={'semaine'}>

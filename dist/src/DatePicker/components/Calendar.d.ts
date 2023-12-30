@@ -1,4 +1,5 @@
 import React from 'react';
+import './Calendar.css';
 type TCalendarProps = {
     limitDateMin?: number;
     limitDateMax?: number;

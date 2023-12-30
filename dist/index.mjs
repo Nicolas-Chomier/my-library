@@ -32,7 +32,7 @@ var j = {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const q = (e) => e.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase().trim(), $ = (e, a) => {
+const q = (e) => e.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase().trim(), _ = (e, a) => {
   const n = B(
     ({ color: r = "currentColor", size: l = 24, strokeWidth: y = 2, absoluteStrokeWidth: E, className: m = "", children: c, ...p }, u) => P(
       "svg",
@@ -60,7 +60,7 @@ const q = (e) => e.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase().trim(), 
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const K = $("CalendarRange", [
+const K = _("CalendarRange", [
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", ry: "2", key: "eu3xkr" }],
   ["line", { x1: "16", x2: "16", y1: "2", y2: "6", key: "m3sa8f" }],
   ["line", { x1: "8", x2: "8", y1: "2", y2: "6", key: "18kwsl" }],
@@ -76,7 +76,7 @@ const K = $("CalendarRange", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const V = $("ChevronLeft", [
+const V = _("ChevronLeft", [
   ["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]
 ]);
 /**
@@ -85,7 +85,7 @@ const V = $("ChevronLeft", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Z = $("ChevronRight", [
+const Z = _("ChevronRight", [
   ["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]
 ]);
 /**
@@ -94,7 +94,7 @@ const Z = $("ChevronRight", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const H = $("ChevronsLeft", [
+const H = _("ChevronsLeft", [
   ["path", { d: "m11 17-5-5 5-5", key: "13zhaf" }],
   ["path", { d: "m18 17-5-5 5-5", key: "h8a8et" }]
 ]);
@@ -104,10 +104,11 @@ const H = $("ChevronsLeft", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const G = $("ChevronsRight", [
+const G = _("ChevronsRight", [
   ["path", { d: "m6 17 5-5-5-5", key: "xnjwq" }],
   ["path", { d: "m13 17 5-5-5-5", key: "17xmmf" }]
-]), Q = [
+]);
+const Q = [
   /* @__PURE__ */ t.createElement("tr", { className: "calendar_row", key: "semaine" }, /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Lu" }, "Lu"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Ma" }, "Ma"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Me" }, "Me"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Je" }, "Je"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Ve" }, "Ve"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Sa" }, "Sa"), /* @__PURE__ */ t.createElement("td", { className: "calendar_day_cell cell", key: "Di" }, "Di"))
 ], X = new Date().toLocaleDateString(), ee = ({
   limitDateMin: e,
@@ -128,7 +129,7 @@ const G = $("ChevronsRight", [
             /* @__PURE__ */ t.createElement("td", { key: `${h}`, className: "cell" })
           );
         else {
-          const D = new Date(c, p, d), C = D.toLocaleDateString() === X, b = te(D), w = T(r), _ = T(l), R = e && D < Y(e), N = a && D > Y(a), v = r && b === w, L = l && b === _, x = b > w && b < _;
+          const D = new Date(c, p, d), C = D.toLocaleDateString() === X, b = te(D), w = T(r), $ = T(l), R = e && D < Y(e), N = a && D > Y(a), v = r && b === w, L = l && b === $, x = b > w && b < $;
           R || N ? g.push(
             /* @__PURE__ */ t.createElement(
               "td",
@@ -288,8 +289,8 @@ const de = ({
     locales: c
   } = se.Fr, [p, u] = f(new Date()), [k, d] = f(""), [i, g] = f(""), h = F(!0), [D, C] = f(!1), [b, w] = f("");
   console.log(D);
-  const _ = F(null);
-  re(_, () => {
+  const $ = F(null);
+  re($, () => {
     C(!1);
   }), A(() => {
     if (k && i) {
@@ -325,7 +326,7 @@ const de = ({
   return /* @__PURE__ */ t.createElement(
     "div",
     {
-      ref: _,
+      ref: $,
       onClick: () => C(!0),
       className: "datePicker_container"
     },
@@ -414,9 +415,6 @@ const de = ({
 };
 export {
   le as Button,
-  ee as Calendar,
   oe as Card,
-  de as DatePicker,
-  ne as Displayer,
-  O as Input
+  de as DatePicker
 };
