@@ -1,4 +1,3 @@
-export * from './src/Card';
-export * from './src/Button';
-export * from './src/DatePicker';
-
+export * from './Card';
+export * from './Button';
+export * from './DatePicker';
