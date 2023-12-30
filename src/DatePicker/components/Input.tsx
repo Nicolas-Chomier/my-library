@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 // Hooks and utilities
 // Configuration
 // Styles
-import styles from './Input.module.css';
+import './Input.css';
 
 type TInputProps = {
 	initialValue: string;
@@ -43,7 +43,7 @@ export const Input: React.FC<TInputProps> = ({
 
 	return (
 		<input
-			className={styles.inputDate}
+			className={'inputDate'}
 			type='text'
 			size={size}
 			minLength={10}

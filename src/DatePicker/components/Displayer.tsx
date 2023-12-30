@@ -5,7 +5,7 @@ import React from 'react';
 // Hooks and utilities
 // Configuration
 // Styles
-import styles from './Displayer.module.css';
+import './Displayer.css';
 
 type TDisplayerProps = {
 	monthList: string[];
@@ -18,10 +18,10 @@ export const Displayer: React.FC<TDisplayerProps> = ({
 	date,
 	message,
 }) => {
-	if (message) return <div className={styles.container}>{message}</div>;
+	if (message) return <div className={'container'}>{message}</div>;
 
 	return (
-		<div className={styles.container}>{`${
+		<div className={'container'}>{`${
 			monthList[date.getMonth()]
 		} ${date.getFullYear()}`}</div>
 	);

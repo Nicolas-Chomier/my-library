@@ -28,6 +28,8 @@
 	},
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/"
+	},
+	"dependencies": {
+		"lucide-react": "^0.303.0"
 	}
 }
-

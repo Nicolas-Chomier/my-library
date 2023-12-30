@@ -17,7 +17,7 @@ import { useClickOutside } from '../hooks/useClickOutside';
 // Configuration
 import { constants } from '../constant/constants';
 // Styles
-import styles from './DatePicker.module.css';
+import './DatePicker.css';
 
 type TDatePickerProps = {
 	limitDateMin?: number;
@@ -166,9 +166,9 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 		<div
 			ref={clickRef}
 			onClick={() => setShowCalendar(true)}
-			className={styles.datePicker_container}
+			className={'datePicker_container'}
 		>
-			<div className={styles.inputs_wrapper}>
+			<div className={'inputs_wrapper'}>
 				<Input
 					placeholder={dateFormat}
 					initialValue={startDate}
@@ -178,7 +178,7 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 				<CalendarRange
 					size={18}
 					strokeWidth={1.5}
-					className={styles.datePicker_input_separator}
+					className={'datePicker_input_separator'}
 				/>
 
 				<Input
@@ -188,7 +188,7 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 				></Input>
 			</div>
 			{showCalendar ? (
-				<div className={styles.datePicker_panel}>
+				<div className={'datePicker_panel'}>
 					<Displayer
 						monthList={months}
 						date={calendarDate}
@@ -203,36 +203,34 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 						handleClick={handleClick}
 					></Calendar>
 
-					<div className={styles.button_panel}>
+					<div className={'button_panel'}>
 						<button
-							className={styles.datePicker_buttons}
+							className={'datePicker_buttons'}
 							onClick={() => changeYear(-1)}
 						>
 							<ChevronLeft size={22} strokeWidth={1.4} />
 						</button>
 						<button
-							className={styles.datePicker_buttons}
+							className={'datePicker_buttons'}
 							onClick={() => changeMonth(-1)}
 						>
 							<ChevronsLeft size={25} strokeWidth={1.3} />
 						</button>
 
 						<div
-							className={styles.datePicker_reset_button}
+							className={'datePicker_reset_button'}
 							onClick={handleReset}
 						>
-							<div className={styles.datePicker_reset_text}>
-								Reset
-							</div>
+							<div className={'datePicker_reset_text'}>Reset</div>
 						</div>
 						<button
-							className={styles.datePicker_buttons}
+							className={'datePicker_buttons'}
 							onClick={() => changeMonth(1)}
 						>
 							<ChevronsRight size={25} strokeWidth={1.3} />
 						</button>
 						<button
-							className={styles.datePicker_buttons}
+							className={'datePicker_buttons'}
 							onClick={() => changeYear(1)}
 						>
 							<ChevronRight size={22} strokeWidth={1.4} />

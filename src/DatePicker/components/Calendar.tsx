@@ -4,30 +4,29 @@ import React, { useMemo } from 'react';
 // Local components
 // Hooks and utilities
 // Configuration
-// Styles
-import styles from './Calendar.module.css';
+// import  './Calendar.css';
 
 const FRAME: React.ReactNode[] = [
-	<tr className={styles.calendar_row} key={'semaine'}>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Lu'}>
+	<tr className={'calendar_row'} key={'semaine'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Lu'}>
 			Lu
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Ma'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ma'}>
 			Ma
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Me'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Me'}>
 			Me
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Je'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Je'}>
 			Je
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Ve'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ve'}>
 			Ve
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Sa'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Sa'}>
 			Sa
 		</td>
-		<td className={`${styles.calendar_day_cell} ${styles.cell}`} key={'Di'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Di'}>
 			Di
 		</td>
 	</tr>,
@@ -66,7 +65,7 @@ export const Calendar: React.FC<TCalendarProps> = ({
 					date > daysInMonth
 				) {
 					weekRow.push(
-						<td key={`${day}`} className={`${styles.cell}`}></td>,
+						<td key={`${day}`} className={`${'cell'}`}></td>,
 					);
 				} else {
 					const cellDate = new Date(year, month, date);
@@ -92,7 +91,7 @@ export const Calendar: React.FC<TCalendarProps> = ({
 						weekRow.push(
 							<td
 								key={`${week}-${day}`}
-								className={`${styles.cell} ${styles.out_dates}`}
+								className={`${'cell'} ${'out_dates'}`}
 							>
 								{date++}
 							</td>,
@@ -102,19 +101,15 @@ export const Calendar: React.FC<TCalendarProps> = ({
 							<td
 								key={`${week}-${day}`}
 								onClick={() => handleClick(cellDate)}
-								className={`${styles.cell} ${styles.dates} ${
+								className={`${'cell'} ${'dates'} ${
 									isStartDate
-										? styles.calendar_cell_start_date
+										? 'calendar_cell_start_date'
 										: ''
-								}	${
-									isEndDate
-										? styles.calendar_cell_end_date
-										: ''
-								}	${
+								}	${isEndDate ? 'calendar_cell_end_date' : ''}	${
 									isBetweenDates
-										? styles.calendar_cell_between
+										? 'calendar_cell_between'
 										: ''
-								} ${isToday ? styles.calendar_cell_today : ''}`}
+								} ${isToday ? 'calendar_cell_today' : ''}`}
 							>
 								{date++}
 							</td>,
@@ -123,7 +118,7 @@ export const Calendar: React.FC<TCalendarProps> = ({
 				}
 			}
 			calendar.push(
-				<tr key={week} className={styles.calendar_row}>
+				<tr key={week} className={'calendar_row'}>
 					{weekRow}
 				</tr>,
 			);
@@ -140,7 +135,7 @@ export const Calendar: React.FC<TCalendarProps> = ({
 	]);
 
 	return (
-		<table className={styles.calendar_table}>
+		<table className={'calendar_table'}>
 			<tbody>{generateCalendar}</tbody>
 		</table>
 	);
