@@ -1,5 +1,11 @@
 // React core
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+	useState,
+	useEffect,
+	useRef,
+	useCallback,
+	useMemo,
+} from 'react';
 // External modules / Third-party libraries
 import {
 	CalendarRange,
@@ -9,15 +15,68 @@ import {
 	ChevronsRight,
 } from 'lucide-react';
 // Local components
-import { Calendar } from './Calendar';
-import { Displayer } from './Displayer';
-import { Input } from './Input';
 // Hooks and utilities
-import { useClickOutside } from '../hooks/useClickOutside';
 // Configuration
-import { constants } from '../constant/constants';
 // Styles
 import './DatePicker.css';
+
+export const constants = {
+	months: [
+		'Janvier',
+		'Février',
+		'Mars',
+		'Avril',
+		'Mai',
+		'Juin',
+		'Juillet',
+		'Août',
+		'Septembre',
+		'Octobre',
+		'Novembre',
+		'Décembre',
+	],
+
+	datePattern: new RegExp(
+		'(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(\\d{4})',
+	),
+	errorMessage: 'Ordre des dates erronée',
+	limitMessage: 'La date est au dessus ou au dessous des limites définies !',
+	dateFormat: 'JJ/MM/AAAA',
+	locales: 'fr-FR',
+	ambienceText: {
+		addYear: 'Année suivante',
+		addMonth: 'Mois suivant',
+		removeYear: 'Année précédente',
+		removeMonth: 'Mois précédent',
+	},
+};
+
+const FRAME: React.ReactNode[] = [
+	<tr className={'calendar_row'} key={'semaine'}>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Lu'}>
+			Lu
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ma'}>
+			Ma
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Me'}>
+			Me
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Je'}>
+			Je
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ve'}>
+			Ve
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Sa'}>
+			Sa
+		</td>
+		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Di'}>
+			Di
+		</td>
+	</tr>,
+];
+const TODAY: string = new Date().toLocaleDateString();
 
 type TDatePickerProps = {
 	limitDateMin?: number;
@@ -37,7 +96,7 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 		errorMessage,
 		limitMessage,
 		locales,
-	} = constants['Fr'];
+	} = constants;
 
 	// State hooks for dates
 	const [calendarDate, setCalendarDate] = useState(new Date());
@@ -47,7 +106,6 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 	const swapDate = useRef(true); // Refs for alterante date selection
 	const [showCalendar, setShowCalendar] = useState(false);
 	const [message, setMessage] = useState('');
-	console.log(showCalendar);
 	// Handler for outside clicks to close the calendar
 	const clickRef = useRef(null);
 	const onClickOutside = () => {
@@ -242,6 +300,197 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 	);
 };
 
+type TCalendarProps = {
+	limitDateMin?: number;
+	limitDateMax?: number;
+	targetDate: Date;
+	startDate: string;
+	endDate: string;
+	handleClick: (date: Date) => void;
+};
+
+const Calendar: React.FC<TCalendarProps> = ({
+	limitDateMin,
+	limitDateMax,
+	targetDate,
+	startDate,
+	endDate,
+	handleClick,
+}) => {
+	const generateCalendar = useMemo(() => {
+		const calendar = [...FRAME];
+		const year = targetDate.getFullYear();
+		const month = targetDate.getMonth();
+		const daysInMonth = getDaysInMonth(year, month);
+		const firstDayOfMonth = new Date(year, month, 1).getDay();
+		let date = 1;
+		for (let week = 0; week < 6; week++) {
+			const weekRow = [];
+			for (let day = 1; day < 8; day++) {
+				if (
+					(week === 0 && day < firstDayOfMonth) ||
+					date > daysInMonth
+				) {
+					weekRow.push(
+						<td key={`${day}`} className={`${'cell'}`}></td>,
+					);
+				} else {
+					const cellDate = new Date(year, month, date);
+					const isToday = cellDate.toLocaleDateString() === TODAY;
+
+					const convertedCellDate = dateToSecond(cellDate);
+					const convertedStartDate = stringToSecond(startDate);
+					const convertedEndDate = stringToSecond(endDate);
+
+					const isDayUnderLimitDateMin =
+						limitDateMin && cellDate < dateAddDays(limitDateMin);
+					const isDayAboveLimitDateMax =
+						limitDateMax && cellDate > dateAddDays(limitDateMax);
+					const isStartDate =
+						startDate && convertedCellDate === convertedStartDate;
+					const isEndDate =
+						endDate && convertedCellDate === convertedEndDate;
+					const isBetweenDates =
+						convertedCellDate > convertedStartDate &&
+						convertedCellDate < convertedEndDate;
+
+					if (isDayUnderLimitDateMin || isDayAboveLimitDateMax) {
+						weekRow.push(
+							<td
+								key={`${week}-${day}`}
+								className={`${'cell'} ${'out_dates'}`}
+							>
+								{date++}
+							</td>,
+						);
+					} else {
+						weekRow.push(
+							<td
+								key={`${week}-${day}`}
+								onClick={() => handleClick(cellDate)}
+								className={`${'cell'} ${'dates'} ${
+									isStartDate
+										? 'calendar_cell_start_date'
+										: ''
+								}	${isEndDate ? 'calendar_cell_end_date' : ''}	${
+									isBetweenDates
+										? 'calendar_cell_between'
+										: ''
+								} ${isToday ? 'calendar_cell_today' : ''}`}
+							>
+								{date++}
+							</td>,
+						);
+					}
+				}
+			}
+			calendar.push(
+				<tr key={week} className={'calendar_row'}>
+					{weekRow}
+				</tr>,
+			);
+			if (date > daysInMonth) break;
+		}
+		return calendar;
+	}, [
+		limitDateMin,
+		limitDateMax,
+		targetDate,
+		startDate,
+		endDate,
+		handleClick,
+	]);
+
+	return (
+		<table className={'calendar_table'}>
+			<tbody>{generateCalendar}</tbody>
+		</table>
+	);
+};
+
+type TInputProps = {
+	initialValue: string;
+	placeholder: string;
+	size?: number;
+	onValueChange: (value: string) => void;
+};
+
+export const Input: React.FC<TInputProps> = ({
+	initialValue,
+	placeholder,
+	size = 10,
+	onValueChange,
+}) => {
+	const [value, setValue] = useState(initialValue || '');
+
+	// Update local state and notify parent when the initialValue changes
+	useEffect(() => {
+		setValue(initialValue);
+		onValueChange(initialValue);
+	}, [initialValue, onValueChange]);
+
+	// Handle changes in the input field
+	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setValue(event.target.value);
+		onValueChange(event.target.value);
+	};
+
+	// Allow only digits in the input
+	const handleKeyDown = (event: React.KeyboardEvent) => {
+		if (/^[a-zA-Z]$/.test(event.key)) {
+			event.preventDefault();
+		}
+	};
+
+	return (
+		<input
+			className={'inputDate'}
+			type='text'
+			size={size}
+			minLength={10}
+			maxLength={10}
+			onKeyDown={handleKeyDown}
+			placeholder={placeholder}
+			onChange={handleChange}
+			value={value}
+		/>
+	);
+};
+
+type TDisplayerProps = {
+	monthList: string[];
+	date: Date;
+	message?: string | null;
+};
+
+export const Displayer: React.FC<TDisplayerProps> = ({
+	monthList,
+	date,
+	message,
+}) => {
+	if (message) return <div className={'displayer_container'}>{message}</div>;
+
+	return (
+		<div className={'displayer_container'}>{`${
+			monthList[date.getMonth()]
+		} ${date.getFullYear()}`}</div>
+	);
+};
+
+// Transform string like: "dd/mm/yyyy" or Date to number (second)
+const dateToSecond = (value: Date): number => {
+	return Math.floor(value.getTime() / 1000);
+};
+//
+const getDaysInMonth = (year: number, month: number): number => {
+	return 32 - new Date(year, month, 32).getDate();
+};
+//
+const stringToSecond = (value: string): number => {
+	const [day, month, year] = value.split('/').map(Number);
+	const newDate = new Date(year, month - 1, day);
+	return Math.floor(newDate.getTime() / 1000);
+};
 // Transform string like: "dd/mm/yyyy" to Date object
 const stringToDate = (date: string): Date => {
 	const [day, month, year] = date.split('/').map(Number);
@@ -252,4 +501,22 @@ const dateAddDays = (offset: number | undefined): Date => {
 	const newDate = new Date();
 	offset && newDate.setDate(newDate.getDate() + offset);
 	return newDate;
+};
+// Hook
+const useClickOutside = (
+	ref: React.RefObject<HTMLElement>,
+	callback: () => void,
+) => {
+	const handleClick = (e: MouseEvent) => {
+		if (ref.current && !ref.current.contains(e.target as Node)) {
+			callback();
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener('click', handleClick);
+		return () => {
+			document.removeEventListener('click', handleClick);
+		};
+	});
 };
