@@ -20,7 +20,7 @@ import {
 // Styles
 import './DatePicker.css';
 
-export const constants = {
+const constants = {
 	months: [
 		'Janvier',
 		'Février',
@@ -84,7 +84,7 @@ type TDatePickerProps = {
 	onDateSelect: (value: [string, string]) => void;
 };
 
-const DatePicker: React.FC<TDatePickerProps> = ({
+export const DatePicker: React.FC<TDatePickerProps> = ({
 	limitDateMin,
 	limitDateMax,
 	onDateSelect,
@@ -415,7 +415,7 @@ type TInputProps = {
 	onValueChange: (value: string) => void;
 };
 
-export const Input: React.FC<TInputProps> = ({
+const Input: React.FC<TInputProps> = ({
 	initialValue,
 	placeholder,
 	size = 10,
@@ -463,11 +463,7 @@ type TDisplayerProps = {
 	message?: string | null;
 };
 
-export const Displayer: React.FC<TDisplayerProps> = ({
-	monthList,
-	date,
-	message,
-}) => {
+const Displayer: React.FC<TDisplayerProps> = ({ monthList, date, message }) => {
 	if (message) return <div className={'displayer_container'}>{message}</div>;
 
 	return (
