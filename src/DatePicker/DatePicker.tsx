@@ -84,7 +84,7 @@ type TDatePickerProps = {
 	onDateSelect: (value: [string, string]) => void;
 };
 
-export const DatePicker: React.FC<TDatePickerProps> = ({
+const DatePicker: React.FC<TDatePickerProps> = ({
 	limitDateMin,
 	limitDateMax,
 	onDateSelect,

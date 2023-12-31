@@ -14,12 +14,6 @@ export declare const constants: {
         removeMonth: string;
     };
 };
-type TDatePickerProps = {
-    limitDateMin?: number;
-    limitDateMax?: number;
-    onDateSelect: (value: [string, string]) => void;
-};
-export declare const DatePicker: React.FC<TDatePickerProps>;
 type TInputProps = {
     initialValue: string;
     placeholder: string;
