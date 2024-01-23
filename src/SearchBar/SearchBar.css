@@ -1,0 +1,177 @@
+/* General Styles for SEARCH BAR Component */
+.searchBar-container,
+.searchBar-content-wrapper,
+.searchBar-content-wrapper-visible,
+.searchBar-icon-wrapper,
+.searchBar-removable-panel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: var(--background-color);
+}
+/* ######################################## */
+/* ##### SEARCH BAR MAIN FRAME ####### */
+/* ######################################## */
+.searchBar-container {
+	inline-size: fit-content;
+
+	margin: auto;
+	background-color: transparent;
+
+	position: relative;
+}
+
+/* ######################################## */
+/* ######## SEARCH BAR CONTENT ####### */
+/* ######################################## */
+.searchBar-content-wrapper-visible,
+.searchBar-content-wrapper {
+	font-size: var(--searchBar-font-size, inherit);
+
+	height: var(--searchBar-height, 44px);
+
+	border-radius: var(--searchBar-semi-border-radius, 22px);
+	background-color: var(--background-color);
+	box-shadow: inset 0 0 0 1px var(--box-shadow-color);
+
+	transition: all 1s ease;
+	z-index: 98;
+}
+
+/* CLICKABLE CONTENT */
+.searchBar-clickable-wrapper {
+	background-color: transparent;
+}
+
+/* INPUT FIELD */
+.searchBar-input-text {
+	text-align: center;
+	background-color: transparent;
+	color: var(--text-color);
+	margin-left: 18px;
+}
+
+.searchBar-input-text:disabled {
+	cursor: not-allowed;
+}
+/* ICON */
+.searchBar-icon-wrapper {
+	width: 36px;
+	height: 36px;
+
+	margin-right: 3px;
+	background-color: transparent;
+}
+
+.searchBar-valid-icon {
+	transform: scale(var(--searchBar-icon-size-scale, 1));
+	color: var(--success-color);
+	cursor: pointer;
+}
+
+.searchBar-reset-icon {
+	transform: scale(var(--searchBar-icon-size-scale, 1));
+	color: var(--danger-color);
+	cursor: pointer;
+}
+
+.searchBar-icon {
+	transform: scale(var(--searchBar-icon-size-scale, 1));
+	color: var(--text-color);
+}
+
+.searchBar-icon-disabled {
+	transform: scale(var(--searchBar-icon-size-scale, 1));
+	color: var(--box-shadow-color);
+}
+.searchBar-icon-wrapper:disabled {
+	cursor: not-allowed;
+}
+.searchBar-content-wrapper-visible {
+	border-radius: var(--searchBar-semi-border-radius)
+		var(--searchBar-semi-border-radius) 0 0;
+
+	box-shadow: inset 0 0 0 2px var(--accent-color);
+
+	transition: border-radius 1s ease, box-shadow 1s ease;
+}
+
+.searchBar-content-wrapper-disabled {
+	background-color: var(--background-color-low-profile);
+	cursor: not-allowed;
+}
+
+.searchBar-content-wrapper:focus-within {
+	box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+/* ######################################## */
+/* ########### SEARCH BAR PANEL ########### */
+/* ######################################## */
+.searchBar-removable-panel {
+	flex-direction: column;
+
+	border-radius: 0 0 var(--searchBar-semi-border-radius, 22px)
+		var(--searchBar-semi-border-radius, 22px);
+
+	height: fit-content;
+	max-height: var(--searchBar-panel-max-height, 350px);
+	width: 100%;
+
+	position: absolute;
+	top: calc(var(--searchBar-height, 44px) + 2px);
+	left: 0;
+
+	z-index: 99;
+
+	box-shadow: inset 0 0 0 1px var(--box-shadow-color);
+	transition: box-shadow 1s ease;
+}
+/* ITEMS LIST */
+.searchBar-item-list {
+	width: inherit;
+	text-align: center;
+	margin: 6px 0;
+	overflow-y: scroll;
+	list-style-type: none;
+
+	background-color: transparent;
+}
+.searchBar-clickable-items {
+	width: calc(99% - 24px);
+	height: fit-content;
+
+	padding: 3px;
+	margin: 1px 1px;
+	border-radius: 14px;
+	background-color: transparent;
+
+	word-wrap: break-word;
+	font-size: var(--searchBar-font-size, inherit);
+	color: var(--text-color);
+
+	cursor: pointer;
+}
+
+.searchBar-clickable-items:hover {
+	background-color: var(--accent-color);
+	color: var(--white-color);
+}
+.searchBar-item-list::-webkit-scrollbar {
+	display: none;
+}
+
+.searchBar-removable-panel:hover {
+	box-shadow: inset 0 0 0 2px var(--accent-color);
+	transition: box-shadow 1s ease;
+}
+
+/* ######################################## */
+/* ############### BACKGROUD ############## */
+/* ######################################## */
+.beautiful-background {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-image: var(--searchBar-image-link, '');
+}

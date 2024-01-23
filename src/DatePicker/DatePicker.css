@@ -1,164 +1,323 @@
-/* Input Part */
-.datePicker_container {
+.datePicker-action-button,
+.datePicker-reset-button,
+.datePicker-button-wrapper,
+.datePicker-calendar-cell,
+.datePicker-calendar-row,
+.datePicker-error-message,
+.datePicker-displayer,
+.datePicker-panel,
+.datePicker-inputs-wrapper,
+.datePicker-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	width: 340px;
-	position: relative;
+}
+
+/* ######################################## */
+/* ######## DATE PICKER MAIN FRAME ######## */
+/* ######################################## */
+.datePicker-container {
+	container-type: inline-size;
+	container-name: product;
+
 	margin: auto;
-}
+	background-color: transparent;
 
-.inputs_wrapper {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-around;
-	background-color: var(--background-color);
-	box-shadow: inset 0 0 0 1px var(--test-grey-color);
-	width: 100%;
-	height: 44px;
-	border-radius: 100px;
-}
-
-.inputs_wrapper:focus-within {
-	box-shadow: inset 0 0 0 1px var(--accent-color);
-}
-
-/* Panel Part */
-.datePicker_panel {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	width: calc(100% - 4px);
-	padding: 2px;
-	background-color: var(--background-color);
-	box-shadow: inset 0 0 0 1px var(--test-grey-color);
-	border-radius: 12px;
-	position: absolute;
-	top: 46px;
-	left: 0;
 	z-index: 99;
 }
-.datePicker_panel:focus {
-	box-shadow: inset 0 0 0 1px var(--accent-color);
-}
-/* Button line panel */
-.button_panel {
-	display: flex;
+
+/* ######################################## */
+/* ######### DATE PICKER CONTENT ########## */
+/* ######################################## */
+.datePicker-inputs-wrapper {
 	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	gap: 15px;
-	height: 40px;
-	margin: 2px 0 10px 0;
-}
 
-.datePicker_reset_button {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50px;
-	border: none;
-	width: 120px;
-	height: 35px;
-	color: var(--background-color);
-	background-color: var(--danger-color);
-	box-shadow: inset 0 0 0 1px var(--grey-color);
-}
-
-.datePicker_reset_text {
-	color: var(--white-color);
-	margin-bottom: 2px;
-}
-
-.datePicker_buttons {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	border: none;
-	background-color: transparent;
-	padding: 0;
-	margin: 0;
 	background-color: var(--background-color);
-	box-shadow: inset 0 0 0 1px var(--grey-color);
-	border-radius: 50px;
-	width: 35px;
-	height: 35px;
+	box-shadow: inset 0 0 0 1px var(--box-shadow-color);
+	border-radius: var(--datePicker-border-radius, 99px);
+	transition: all 1s ease;
+
+	position: relative;
+}
+/* INPUT FIELD */
+.datePicker-inputs-dates {
+	border: none;
+	outline: none;
+
+	background-color: transparent;
+	text-align: center;
+	color: var(--text-color);
 }
 
-/* CALENDAR CSS */
-.calendar_row {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-}
-
-.cell {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
-	border-radius: 50px;
-	width: 30px;
-	height: 30px;
-	margin: 3px 5px;
-}
-
-.calendar_day_cell {
-	cursor: none;
-}
-
-.out_dates {
-	background-color: var(--text-color);
-	color: var(--background-color-mat);
+.datePicker-inputs-dates:disabled {
 	cursor: not-allowed;
 }
-.dates {
-	cursor: pointer;
+
+/* CALENDAR / SEPARATOR ICON */
+.datePicker-middle-icon {
+	margin-top: 1px;
+	transition: color 1s ease;
+	color: var(--text-color);
 }
-.dates:hover {
-	background-color: var(--accent-color);
+
+.datePicker-middle-icon-valid {
+	margin-top: 1px;
+	color: var(--success-color);
 }
-.calendar_cell_dates_error {
-	background-color: var(--danger-color);
+
+.datePicker-input-separator {
+	margin: 0 -3px;
+	transform: rotate(90deg);
 }
-.calendar_cell_start_date {
-	background-color: var(--second-accent-color);
-}
-.calendar_cell_end_date {
-	background-color: var(--accent-color);
-}
-.calendar_cell_between {
-	background-color: var(--grey-color);
-}
-.calendar_cell_today {
+.datePicker-inputs-wrapper:focus-within .datePicker-middle-icon {
 	color: var(--accent-color);
 }
 
-/* INPUT CSS */
-.inputDate {
-	border: none;
-	outline: none;
-	background-color: transparent;
-	text-align: center;
-	font-size: 100%;
-	padding: 2px 1px 0 1px;
-	margin: 0 15px;
+.datePicker-inputs-wrapper:focus-within {
+	box-shadow: inset 0 0 0 2px var(--accent-color);
 }
 
-/* DISPLAYER CSS */
-.displayer_container {
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
+.datePicker-inputs-wrapper:disabled {
+	background-color: var(--background-color-low-profile);
+	cursor: not-allowed;
+}
+
+/* ######################################## */
+/* ########## DATE PICKER PANEL ########### */
+/* ######################################## */
+.datePicker-panel {
 	width: 100%;
-	height: 40px;
-	margin: 2px 0;
+
+	box-shadow: inset 0 0 0 1px var(--box-shadow-color);
+	border-radius: var(--datePicker-semi-border-radius, 22px);
+	background-color: var(--background-color);
+
+	position: absolute;
+	left: 0;
+
+	transition: box-shadow 1s ease;
+	z-index: 99;
+}
+
+/* DATE & INFORMATION DISPLAYER */
+.datePicker-displayer {
+	flex-direction: row;
+
+	inline-size: 100%;
+
 	text-align: center;
+}
+
+.datePicker-error-message {
+	flex-direction: row;
+	height: 30px;
+	text-align: center;
+	padding: 0 17px;
+	border-radius: 50px;
+	color: var(--text-color);
+	background-color: var(--danger-color);
+}
+
+/* CALENDAR */
+.datePicker-calendar-row {
+	flex-direction: row;
+}
+
+.datePicker-calendar-cell {
+	flex-direction: row;
+	border-radius: 99px;
+	color: var(--text-color);
+	cursor: pointer;
+}
+
+.datePicker-calendar-day-text {
+	cursor: auto;
+}
+
+.datePicker-calendar-dates-none {
+	background-color: var(--anthracite-color);
+	color: var(--grey-color);
+	cursor: not-allowed;
+}
+
+.datePicker-calendar-dates:hover {
+	background-color: var(--grey-color);
+}
+
+.datePicker-calendar-start-date {
+	background-color: var(--accent-color);
+	color: var(--white-color);
+}
+
+.datePicker-calendar-end-date {
+	background-color: var(--accent-color);
+	color: var(--white-color);
+}
+
+.datePicker-calendar-date-between {
+	background-color: var(--grey-color);
+}
+
+.datePicker-calendar-today {
+	background-color: var(--success-color);
+	color: var(--white-color);
+}
+
+/* BUTTONS WRAPPER */
+.datePicker-reset-button,
+.datePicker-button-wrapper {
+	flex-direction: row;
+}
+
+.datePicker-reset-button,
+.datePicker-action-button {
+	border-radius: 99px;
+	border: none;
+
+	background-color: var(--background-color);
+	box-shadow: inset 0 0 0 1px var(--box-shadow-color);
+
+	cursor: pointer;
+}
+
+.datePicker-reset-button {
+	color: var(--background-color);
+	background-color: var(--danger-color);
+}
+.datePicker-reset-button-content {
+	color: var(--white-color);
+}
+
+.datePicker-panel:hover {
+	transition: box-shadow 1s ease;
+	box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+/* ######################################## */
+/* ######### MEDIA QUERY CONTAINER ######## */
+/* ######################################## */
+.datePicker-format-small {
+	container-type: inline-size;
+	container-name: product;
+
+	inline-size: 200px;
+}
+
+@container product (inline-size <= 250px) {
+	.datePicker-inputs-wrapper {
+		justify-content: center;
+		width: 100%;
+		height: 36px;
+	}
+	.datePicker-inputs-dates {
+		font-size: 83%;
+		margin: 0;
+		inline-size: 90px;
+	}
+	.datePicker-panel {
+		top: 38px;
+	}
+	/* DATE & INFORMATION DISPLAYER */
+	.datePicker-displayer {
+		height: 30px;
+		margin: 6px 0 -4px 0;
+		font-size: 95%;
+	}
+
+	.datePicker-error-message {
+		inline-size: 90%;
+		margin: 8px 0 -3px 0;
+		padding: 2px 4px;
+		font-size: 85%;
+	}
+
+	/* CALENDAR */
+	.datePicker-calendar-cell {
+		width: 22px;
+		height: 22px;
+		margin: 2px 2px;
+		font-size: 75%;
+	}
+
+	/* BUTTONS WRAPPER */
+	.datePicker-button-wrapper {
+		height: fit-content;
+		margin: 10px 0 13px 0;
+		gap: 11px;
+	}
+	.datePicker-reset-button,
+	.datePicker-action-button {
+		width: 26px;
+		height: 26px;
+	}
+}
+
+.datePicker-format-standard {
+	container-type: inline-size;
+	container-name: product;
+
+	inline-size: 300px;
+}
+
+@container product (inline-size > 250px) {
+	.datePicker-inputs-wrapper {
+		justify-content: space-around;
+		width: 100%;
+		height: 44px;
+	}
+	.datePicker-inputs-dates {
+		font-size: 105%;
+		margin: 10px 12px;
+		inline-size: auto;
+	}
+	.datePicker-panel {
+		top: 46px;
+	}
+	/* DATE & INFORMATION DISPLAYER */
+	.datePicker-displayer {
+		height: 40px;
+		margin: 8px 0 0 0;
+		font-size: 120%;
+	}
+
+	.datePicker-error-message {
+		inline-size: 80%;
+		margin: 12px 0 6px 0;
+		font-size: 105%;
+	}
+
+	/* CALENDAR */
+	.datePicker-calendar-cell {
+		width: 32px;
+		height: 32px;
+		margin: 2px 3px;
+		font-size: 100%;
+	}
+
+	/* BUTTONS WRAPPER */
+	.datePicker-button-wrapper {
+		height: fit-content;
+		margin: 25px 0 12px 0;
+		gap: 10px;
+	}
+	.datePicker-action-button {
+		width: 32px;
+		height: 32px;
+	}
+	.datePicker-reset-button {
+		margin: 0 3px;
+		width: 100px;
+		height: 32px;
+	}
+}
+
+/* ######################################## */
+/* ############### BACKGROUD ############## */
+/* ######################################## */
+.beautiful-background {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+	background-image: var(--datePicker-image-link, '');
 }

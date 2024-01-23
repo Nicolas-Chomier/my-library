@@ -1,4 +1,11 @@
-export * from './src/Card';
-export * from './src/Button';
-export * from './src/DatePicker';
-
+export * from './Card';
+export * from './Button';
+export * from './CustomizableButton';
+export * from './DatePicker';
+export * from './FormButton';
+export * from './inputNumber';
+export * from './InputString';
+export * from './MagicCard';
+export * from './SearchBar';
+export * from './SelectMultiple';
+export * from './UserProfile';

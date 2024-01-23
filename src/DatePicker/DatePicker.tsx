@@ -8,15 +8,15 @@ import React, {
 } from 'react';
 // External modules / Third-party libraries
 import {
+	CalendarCheck,
 	CalendarRange,
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
+	MoreHorizontal,
+	X,
 } from 'lucide-react';
-// Local components
-// Hooks and utilities
-// Configuration
 // Styles
 import './DatePicker.css';
 
@@ -39,39 +39,53 @@ const constants = {
 	datePattern: new RegExp(
 		'(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(\\d{4})',
 	),
-	errorMessage: 'Ordre des dates erronée',
-	limitMessage: 'La date est au dessus ou au dessous des limites définies !',
-	dateFormat: 'JJ/MM/AAAA',
+	errorMessage: 'Ordre des dates erroné !',
+	limitMessage: 'La date est hors des limites définies !',
 	locales: 'fr-FR',
-	ambienceText: {
-		addYear: 'Année suivante',
-		addMonth: 'Mois suivant',
-		removeYear: 'Année précédente',
-		removeMonth: 'Mois précédent',
-	},
 };
 
 const FRAME: React.ReactNode[] = [
-	<tr className={'calendar_row'} key={'semaine'}>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Lu'}>
+	<tr className={'datePicker-calendar-row'} key={'week'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Lu'}
+		>
 			Lu
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ma'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Ma'}
+		>
 			Ma
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Me'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Me'}
+		>
 			Me
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Je'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Je'}
+		>
 			Je
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Ve'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Ve'}
+		>
 			Ve
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Sa'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Sa'}
+		>
 			Sa
 		</td>
-		<td className={`${'calendar_day_cell'} ${'cell'}`} key={'Di'}>
+		<td
+			className={`${'datePicker-calendar-day-text'} ${'datePicker-calendar-cell'}`}
+			key={'Di'}
+		>
 			Di
 		</td>
 	</tr>,
@@ -79,79 +93,113 @@ const FRAME: React.ReactNode[] = [
 const TODAY: string = new Date().toLocaleDateString();
 
 type TDatePickerProps = {
+	placeholder?: string;
 	limitDateMin?: number;
 	limitDateMax?: number;
-	onDateSelect: (value: [string, string]) => void;
+	isSubmit?: boolean;
+	isValid?: boolean;
+	open?: boolean;
+	disabled?: boolean;
+	size?: 'small' | 'standard';
+	isBeautiful?: boolean;
+	className?: string;
+	onFieldChange: (
+		value: [Date | undefined, Date | undefined] | undefined,
+	) => void;
 };
 
+//+ DATE PICKER (Fr)
 export const DatePicker: React.FC<TDatePickerProps> = ({
+	placeholder = 'jj/mm/aaaa',
 	limitDateMin,
 	limitDateMax,
-	onDateSelect,
+	isSubmit,
+	isValid,
+	open = false,
+	disabled = false,
+	size = 'standard',
+	isBeautiful = true,
+	className,
+	onFieldChange,
 }) => {
-	const {
-		datePattern,
-		dateFormat,
-		months,
-		errorMessage,
-		limitMessage,
-		locales,
-	} = constants;
-
+	const { datePattern, months, errorMessage, limitMessage, locales } =
+		constants;
 	// State hooks for dates
 	const [calendarDate, setCalendarDate] = useState(new Date());
 	const [startDate, setStartDate] = useState<string>('');
 	const [endDate, setEndDate] = useState<string>('');
 	// Refs & State hooks for logic / animation
 	const swapDate = useRef(true); // Refs for alterante date selection
-	const [showCalendar, setShowCalendar] = useState(false);
+	const [showCalendar, setShowCalendar] = useState(open);
 	const [message, setMessage] = useState('');
-	// Handler for outside clicks to close the calendar
+
 	const clickRef = useRef(null);
-	const onClickOutside = () => {
-		setShowCalendar(false);
-	};
-	useClickOutside(clickRef, onClickOutside);
 
-	// useEffect to handle date validation
-	useEffect(() => {
-		// Check if both dates are present
-		if (startDate && endDate) {
-			const start = stringToDate(startDate);
-			const end = stringToDate(endDate);
-
-			if (start > end) {
-				// Set an error message if the start date is after the end date
-				setMessage(errorMessage);
-			} else {
-				// Clear the error message and execute onDateSelect if the dates are valid
-				setMessage('');
-				if (start < end) {
-					onDateSelect([startDate, endDate]);
-				}
-			}
-		}
-	}, [startDate, endDate, errorMessage, onDateSelect]);
+	// Handler for outside clicks to close the calendar
+	useClickOutside(clickRef, () => setShowCalendar(false));
 
 	// Function to add / remove years and months
-	const changeMonth = (delta: number) =>
+	const changeMonth = (
+		event: React.MouseEvent<HTMLButtonElement>,
+		delta: number,
+	) => {
 		setCalendarDate(
 			(prev) => new Date(prev.getFullYear(), prev.getMonth() + delta, 1),
 		);
+		event.preventDefault();
+	};
 
-	const changeYear = (delta: number) =>
+	const changeYear = (
+		event: React.MouseEvent<HTMLButtonElement>,
+		delta: number,
+	) => {
 		setCalendarDate(
 			(prev) => new Date(prev.getFullYear() + delta, prev.getMonth(), 1),
 		);
+		event.preventDefault();
+	};
+
+	// Function to switch calendar icon according form status
+	const calendarIcon = (isValid: boolean | undefined, format: string) => {
+		if (format === 'small')
+			return (
+				<MoreHorizontal
+					size={12}
+					strokeWidth={1.4}
+					className='datePicker-input-separator'
+				/>
+			);
+		if (isValid) {
+			return (
+				<CalendarCheck
+					size={19}
+					strokeWidth={1.4}
+					className='datePicker-middle-icon-valid'
+				/>
+			);
+		}
+		return (
+			<CalendarRange
+				size={18}
+				strokeWidth={1.5}
+				className='datePicker-middle-icon'
+			/>
+		);
+	};
 
 	// Reset handler for clearing dates
-	const handleReset = () => {
-		setCalendarDate(new Date());
-		setStartDate('');
-		setEndDate('');
-		setMessage('');
-		swapDate.current = true;
-	};
+	const handleReset = useCallback(
+		(event: React.MouseEvent<HTMLButtonElement>) => {
+			setCalendarDate(new Date());
+			setStartDate('');
+			setEndDate('');
+			setMessage('');
+			onFieldChange(undefined);
+			swapDate.current = true;
+			event.preventDefault();
+		},
+		[onFieldChange],
+	);
 
 	// Handler to update the start date and check against the minimum allowed date
 	const handleChangeStartDate = useCallback(
@@ -159,10 +207,9 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 			// Check if the input value matches the date pattern
 			if (datePattern.test(value)) {
 				const newDate = stringToDate(value);
-				const dateLimit = dateAddDays(limitDateMin);
-
 				// Check if there is a minimum limit date defined
 				if (limitDateMin) {
+					const dateLimit = dateAddDays(limitDateMin);
 					// If the new date is after the minimum limit, update the calendar and start date
 					if (dateLimit < newDate) {
 						setCalendarDate(newDate);
@@ -177,6 +224,8 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 					setCalendarDate(newDate);
 					setStartDate(value);
 				}
+			} else {
+				setStartDate(value);
 			}
 		},
 		[datePattern, limitDateMin, limitMessage],
@@ -188,18 +237,25 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 			// Check if the input value matches the date pattern
 			if (datePattern.test(value)) {
 				const newDate = stringToDate(value);
-				const dateLimit = dateAddDays(limitDateMax);
-
-				// Check if the new date is before the maximum limit date
-				if (dateLimit > newDate) {
-					// If the new date meets the condition, update the calendar and end date
+				if (limitDateMax) {
+					const dateLimit = dateAddDays(limitDateMax);
+					// Check if the new date is before the maximum limit date
+					if (newDate < dateLimit) {
+						// If the new date meets the condition, update the calendar and end date
+						setCalendarDate(newDate);
+						setEndDate(value);
+					} else {
+						// If the new date exceeds the maximum limit, show a limit message and reset end date
+						setMessage(limitMessage);
+						setEndDate(' ');
+					}
+				} else {
+					// If no maximum limit is defined, just update the calendar and end date
 					setCalendarDate(newDate);
 					setEndDate(value);
-				} else {
-					// If the new date exceeds the maximum limit, show a limit message and reset end date
-					setMessage(limitMessage);
-					setEndDate(' ');
 				}
+			} else {
+				setEndDate(value);
 			}
 		},
 		[datePattern, limitDateMax, limitMessage],
@@ -219,39 +275,82 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 		}
 	};
 
-	// TSX
+	const openPanel = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setShowCalendar(true);
+		event.preventDefault();
+	};
+
+	// Effect to handle date validation
+	useEffect(() => {
+		// Check if both dates are present
+		if (datePattern.test(startDate) && datePattern.test(endDate)) {
+			const start = stringToDate(startDate);
+			const end = stringToDate(endDate);
+			if (start > end) {
+				// Set an error message if the start date is after the end date
+				setMessage(errorMessage);
+			} else {
+				// Clear the error message and execute onDateSelect if the dates are valid
+				setMessage('');
+				if (start < end) {
+					onFieldChange([start, end]);
+				}
+			}
+		}
+	}, [startDate, endDate, errorMessage, datePattern, onFieldChange]);
+
+	// Effect to clean component after form validation
+	useEffect(() => {
+		if (isSubmit) {
+			setCalendarDate(new Date());
+			setStartDate('');
+			setEndDate('');
+			setMessage('');
+			onFieldChange(undefined);
+			swapDate.current = true;
+		}
+	}, [isSubmit, onFieldChange]);
+
+	//+ TSX
 	return (
 		<div
 			ref={clickRef}
-			onClick={() => setShowCalendar(true)}
-			className={'datePicker_container'}
+			className={`datePicker-container  datePicker-format-${size} ${className}`}
 		>
-			<div className={'inputs_wrapper'}>
+			<button
+				className='datePicker-inputs-wrapper'
+				disabled={disabled}
+				onClick={openPanel}
+			>
 				<Input
-					placeholder={dateFormat}
+					placeholder={placeholder}
 					initialValue={startDate}
+					disabled={disabled}
 					onValueChange={handleChangeStartDate}
 				></Input>
 
-				<CalendarRange
-					size={18}
-					strokeWidth={1.5}
-					className={'datePicker_input_separator'}
-				/>
+				{calendarIcon(isValid, size)}
 
 				<Input
-					placeholder={dateFormat}
+					placeholder={placeholder}
 					initialValue={endDate}
+					disabled={disabled}
 					onValueChange={handleChangeEndDate}
 				></Input>
-			</div>
+			</button>
+
 			{showCalendar ? (
-				<div className={'datePicker_panel'}>
+				<div
+					className={`datePicker-panel ${
+						isBeautiful ? 'beautiful-background' : ''
+					} `}
+				>
 					<Displayer
 						monthList={months}
 						date={calendarDate}
 						message={message}
 					></Displayer>
+
 					<Calendar
 						limitDateMin={limitDateMin}
 						limitDateMax={limitDateMax}
@@ -261,37 +360,47 @@ export const DatePicker: React.FC<TDatePickerProps> = ({
 						handleClick={handleClick}
 					></Calendar>
 
-					<div className={'button_panel'}>
+					<div className='datePicker-button-wrapper'>
 						<button
-							className={'datePicker_buttons'}
-							onClick={() => changeYear(-1)}
+							className='datePicker-action-button'
+							onClick={(e) => changeYear(e, -1)}
 						>
-							<ChevronLeft size={22} strokeWidth={1.4} />
+							<ChevronsLeft size={22} strokeWidth={1.4} />
 						</button>
 						<button
-							className={'datePicker_buttons'}
-							onClick={() => changeMonth(-1)}
+							className='datePicker-action-button'
+							onClick={(e) => changeMonth(e, -1)}
 						>
-							<ChevronsLeft size={25} strokeWidth={1.3} />
+							<ChevronLeft size={25} strokeWidth={1.3} />
 						</button>
 
-						<div
-							className={'datePicker_reset_button'}
+						<button
+							className='datePicker-reset-button'
 							onClick={handleReset}
 						>
-							<div className={'datePicker_reset_text'}>Reset</div>
-						</div>
-						<button
-							className={'datePicker_buttons'}
-							onClick={() => changeMonth(1)}
-						>
-							<ChevronsRight size={25} strokeWidth={1.3} />
+							{size === 'small' ? (
+								<X
+									size={19}
+									strokeWidth={1.3}
+									className='datePicker-reset-button-content'
+								/>
+							) : (
+								<div className='datePicker-reset-button-content'>
+									Reset
+								</div>
+							)}
 						</button>
 						<button
-							className={'datePicker_buttons'}
-							onClick={() => changeYear(1)}
+							className='datePicker-action-button'
+							onClick={(e) => changeMonth(e, 1)}
 						>
-							<ChevronRight size={22} strokeWidth={1.4} />
+							<ChevronRight size={25} strokeWidth={1.3} />
+						</button>
+						<button
+							className='datePicker-action-button'
+							onClick={(e) => changeYear(e, 1)}
+						>
+							<ChevronsRight size={22} strokeWidth={1.4} />
 						</button>
 					</div>
 				</div>
@@ -317,14 +426,97 @@ const Calendar: React.FC<TCalendarProps> = ({
 	endDate,
 	handleClick,
 }) => {
-	const generateCalendar = useMemo(() => {
-		const calendar = [...FRAME];
-		const year = targetDate.getFullYear();
-		const month = targetDate.getMonth();
-		const daysInMonth = getDaysInMonth(year, month);
-		const firstDayOfMonth = new Date(year, month, 1).getDay();
-		let date = 1;
-		for (let week = 0; week < 6; week++) {
+	// Function which determine which css class assign to date in calendar
+	const getCellDateInfo = useCallback(
+		(cellDate: Date) => {
+			const isToday = cellDate.toLocaleDateString() === TODAY;
+
+			const convertedCellDate = dateToSecond(cellDate);
+			const convertedStartDate = stringToSecond(startDate);
+			const convertedEndDate = stringToSecond(endDate);
+
+			const isDayUnderLimitDateMin =
+				limitDateMin && cellDate < dateAddDays(limitDateMin);
+			const isDayAboveLimitDateMax =
+				limitDateMax && cellDate > dateAddDays(limitDateMax);
+			const isStartDate =
+				startDate && convertedCellDate === convertedStartDate;
+			const isEndDate = endDate && convertedCellDate === convertedEndDate;
+			const isBetweenDates =
+				convertedCellDate > convertedStartDate &&
+				convertedCellDate < convertedEndDate;
+
+			return {
+				isToday,
+				isDayUnderLimitDateMin,
+				isDayAboveLimitDateMax,
+				isStartDate,
+				isEndDate,
+				isBetweenDates,
+			};
+		},
+		[startDate, endDate, limitDateMin, limitDateMax],
+	);
+
+	// Function which generate the day cell calendar (<td>)
+	const generateDayCell = useCallback(
+		(
+			week: number,
+			day: number,
+			date: number,
+			year: number,
+			month: number,
+		) => {
+			const cellDate = new Date(year, month, date);
+			const cellDateInfo = getCellDateInfo(cellDate);
+
+			const cellClasses = `datePicker-calendar-cell datePicker-calendar-dates ${
+				cellDateInfo.isStartDate ? 'datePicker-calendar-start-date' : ''
+			} ${cellDateInfo.isEndDate ? 'datePicker-calendar-end-date' : ''} ${
+				cellDateInfo.isBetweenDates
+					? 'datePicker-calendar-date-between'
+					: ''
+			} ${cellDateInfo.isToday ? 'datePicker-calendar-today' : ''}`;
+
+			if (
+				cellDateInfo.isDayUnderLimitDateMin ||
+				cellDateInfo.isDayAboveLimitDateMax
+			) {
+				return (
+					<td
+						key={`${week}-${day}`}
+						className={
+							'datePicker-calendar-cell datePicker-calendar-dates-none'
+						}
+					>
+						{date}
+					</td>
+				);
+			} else {
+				return (
+					<td
+						key={`${week}-${day}`}
+						onClick={() => handleClick(cellDate)}
+						className={cellClasses}
+					>
+						{date}
+					</td>
+				);
+			}
+		},
+		[handleClick, getCellDateInfo],
+	);
+
+	// Function which build the calendar to stack day rows in render array
+	const generateWeekRow = useCallback(
+		(
+			week: number,
+			date: number,
+			daysInMonth: number,
+			firstDayOfMonth: number,
+			year: number,
+			month: number,
+		) => {
 			const weekRow = [];
 			for (let day = 1; day < 8; day++) {
 				if (
@@ -332,77 +524,53 @@ const Calendar: React.FC<TCalendarProps> = ({
 					date > daysInMonth
 				) {
 					weekRow.push(
-						<td key={`${day}`} className={`${'cell'}`}></td>,
+						<td
+							key={`${day}`}
+							className='datePicker-calendar-cell'
+						></td>,
 					);
 				} else {
-					const cellDate = new Date(year, month, date);
-					const isToday = cellDate.toLocaleDateString() === TODAY;
-
-					const convertedCellDate = dateToSecond(cellDate);
-					const convertedStartDate = stringToSecond(startDate);
-					const convertedEndDate = stringToSecond(endDate);
-
-					const isDayUnderLimitDateMin =
-						limitDateMin && cellDate < dateAddDays(limitDateMin);
-					const isDayAboveLimitDateMax =
-						limitDateMax && cellDate > dateAddDays(limitDateMax);
-					const isStartDate =
-						startDate && convertedCellDate === convertedStartDate;
-					const isEndDate =
-						endDate && convertedCellDate === convertedEndDate;
-					const isBetweenDates =
-						convertedCellDate > convertedStartDate &&
-						convertedCellDate < convertedEndDate;
-
-					if (isDayUnderLimitDateMin || isDayAboveLimitDateMax) {
-						weekRow.push(
-							<td
-								key={`${week}-${day}`}
-								className={`${'cell'} ${'out_dates'}`}
-							>
-								{date++}
-							</td>,
-						);
-					} else {
-						weekRow.push(
-							<td
-								key={`${week}-${day}`}
-								onClick={() => handleClick(cellDate)}
-								className={`${'cell'} ${'dates'} ${
-									isStartDate
-										? 'calendar_cell_start_date'
-										: ''
-								}	${isEndDate ? 'calendar_cell_end_date' : ''}	${
-									isBetweenDates
-										? 'calendar_cell_between'
-										: ''
-								} ${isToday ? 'calendar_cell_today' : ''}`}
-							>
-								{date++}
-							</td>,
-						);
-					}
+					weekRow.push(generateDayCell(week, day, date, year, month));
+					date++;
 				}
 			}
+			return weekRow;
+		},
+		[generateDayCell],
+	);
+
+	// Calendar componenent
+	const generateCalendar = useMemo(() => {
+		const calendar = [...FRAME];
+		const year = targetDate.getFullYear();
+		const month = targetDate.getMonth();
+		const daysInMonth = getDaysInMonth(year, month);
+		const firstDayOfMonth = new Date(year, month, 1).getDay();
+		let date = 1;
+
+		for (let week = 0; week < 5; week++) {
+			const weekRow = generateWeekRow(
+				week,
+				date,
+				daysInMonth,
+				firstDayOfMonth,
+				year,
+				month,
+			);
 			calendar.push(
-				<tr key={week} className={'calendar_row'}>
+				<tr key={week} className='datePicker-calendar-row'>
 					{weekRow}
 				</tr>,
 			);
 			if (date > daysInMonth) break;
+			date += weekRow.filter((cell) => cell.props.children).length;
 		}
+
 		return calendar;
-	}, [
-		limitDateMin,
-		limitDateMax,
-		targetDate,
-		startDate,
-		endDate,
-		handleClick,
-	]);
+	}, [targetDate, generateWeekRow]);
 
 	return (
-		<table className={'calendar_table'}>
+		<table>
 			<tbody>{generateCalendar}</tbody>
 		</table>
 	);
@@ -412,17 +580,18 @@ type TInputProps = {
 	initialValue: string;
 	placeholder: string;
 	size?: number;
+	disabled?: boolean;
 	onValueChange: (value: string) => void;
 };
 
 const Input: React.FC<TInputProps> = ({
 	initialValue,
 	placeholder,
-	size = 10,
+	size = 12,
+	disabled = false,
 	onValueChange,
 }) => {
 	const [value, setValue] = useState(initialValue || '');
-
 	// Update local state and notify parent when the initialValue changes
 	useEffect(() => {
 		setValue(initialValue);
@@ -444,7 +613,7 @@ const Input: React.FC<TInputProps> = ({
 
 	return (
 		<input
-			className={'inputDate'}
+			className='datePicker-inputs-dates'
 			type='text'
 			size={size}
 			minLength={10}
@@ -453,6 +622,7 @@ const Input: React.FC<TInputProps> = ({
 			placeholder={placeholder}
 			onChange={handleChange}
 			value={value}
+			disabled={disabled}
 		/>
 	);
 };
@@ -464,15 +634,18 @@ type TDisplayerProps = {
 };
 
 const Displayer: React.FC<TDisplayerProps> = ({ monthList, date, message }) => {
-	if (message) return <div className={'displayer_container'}>{message}</div>;
+	// Display error message if it exists
+	if (message) {
+		return <div className='datePicker-error-message'>{message}</div>;
+	}
 
-	return (
-		<div className={'displayer_container'}>{`${
-			monthList[date.getMonth()]
-		} ${date.getFullYear()}`}</div>
-	);
+	// Format date for display
+	const formattedDate = `${monthList[date.getMonth()]} ${date.getFullYear()}`;
+
+	return <div className='datePicker-displayer'>{formattedDate}</div>;
 };
 
+//+ REQUIERED FUNCTIONS
 // Transform string like: "dd/mm/yyyy" or Date to number (second)
 const dateToSecond = (value: Date): number => {
 	return Math.floor(value.getTime() / 1000);
@@ -495,10 +668,10 @@ const stringToDate = (date: string): Date => {
 // Transform number of day to Date
 const dateAddDays = (offset: number | undefined): Date => {
 	const newDate = new Date();
-	offset && newDate.setDate(newDate.getDate() + offset);
+	offset && newDate.setDate(newDate.getDate() + offset - 1);
 	return newDate;
 };
-// Hook
+// Custom hook to click outside the component
 const useClickOutside = (
 	ref: React.RefObject<HTMLElement>,
 	callback: () => void,
