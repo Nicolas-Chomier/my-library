@@ -2,6 +2,7 @@ import React from 'react';
 import './DatePicker.css';
 type TDatePickerProps = {
     placeholder?: string;
+    label?: [string, string];
     limitDateMin?: number;
     limitDateMax?: number;
     isSubmit?: boolean;

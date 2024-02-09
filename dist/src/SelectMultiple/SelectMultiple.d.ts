@@ -3,6 +3,8 @@ import './SelectMultiple.css';
 type TSelectMultipleProps = {
     data: string[];
     placeholder?: string;
+    label?: string;
+    labelPosition?: 'start' | 'end' | 'left' | 'right' | 'center' | 'justify';
     size?: number;
     isSubmit?: boolean;
     isValid?: boolean;

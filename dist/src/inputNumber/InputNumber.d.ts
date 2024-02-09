@@ -3,6 +3,8 @@ import './InputNumber.css';
 type TInputNumberProps = {
     errors?: string;
     placeholder?: string;
+    label?: string;
+    labelPosition?: 'start' | 'end' | 'left' | 'right' | 'center' | 'justify';
     size?: number;
     step?: string;
     min?: string;
