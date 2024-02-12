@@ -3,7 +3,7 @@ export * from './Button';
 export * from './CustomizableButton';
 export * from './DatePicker';
 export * from './FormButton';
-export * from './inputNumber';
+export * from './InputNumber';
 export * from './InputString';
 export * from './MagicCard';
 export * from './SearchBar';
