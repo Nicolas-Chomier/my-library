@@ -1,7 +1,7 @@
 import React from 'react';
 import './SelectMultiple.css';
 type TSelectMultipleProps = {
-    data: string[];
+    data?: string[];
     placeholder?: string;
     label?: string;
     labelPosition?: 'start' | 'end' | 'left' | 'right' | 'center' | 'justify';

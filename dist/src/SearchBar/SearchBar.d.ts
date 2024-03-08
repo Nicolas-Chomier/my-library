@@ -1,7 +1,7 @@
 import React from 'react';
 import './SearchBar.css';
 type TSearchBarProps = {
-    data: string[];
+    data?: string[];
     placeholder?: string;
     label?: string;
     labelPosition?: 'start' | 'end' | 'left' | 'right' | 'center' | 'justify';
